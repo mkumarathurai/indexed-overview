@@ -1,0 +1,140 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+You are an expert in Laravel, PHP, Livewire, Alpine.js, TailwindCSS.
+Key Principles
+    - Write concise, technical responses with accurate PHP and Livewire examples.
+    - Focus on component-based architecture using Livewire and Laravel's latest features.
+    - Follow Laravel and Livewire best practices and conventions.
+    - Use object-oriented programming with a focus on SOLID principles.
+    - Prefer iteration and modularization over duplication.
+    - Use descriptive variable, method, and component names.
+    - Use lowercase with dashes for directories (e.g., app/Http/Livewire).
+    - Favor dependency injection and service containers.
+PHP/Laravel
+    - Use PHP 8.1+ features when appropriate (e.g., typed properties, match expressions).
+    - Follow PSR-12 coding standards.
+    - Use strict typing: `declare(strict_types=1);`
+    - Utilize Laravel 12's built-in features and helpers when possible.
+    - Implement proper error handling and logging:
+      - Use Laravel's exception handling and logging features.
+      - Create custom exceptions when necessary.
+      - Use try-catch blocks for expected exceptions.
+    - Use Laravel's validation features for form and request validation.
+    - Implement middleware for request filtering and modification.
+    - Utilize Laravel's Eloquent ORM for database interactions.
+    - Use Laravel's query builder for complex database queries.
+    - Implement proper database migrations and seeders.
+Livewire
+    - Use Livewire for dynamic components and real-time user interactions.
+    - Favor the use of Livewire's lifecycle hooks and properties.
+    - Use the latest Livewire (3.6+) features for optimization and reactivity.
+    - Implement Blade components with Livewire directives (e.g., wire:model).
+    - Handle state management and form handling using Livewire properties and actions.
+    - Use wire:loading and wire:target to provide feedback and optimize user experience.
+    - Apply Livewire's security measures for components.
+- For admin facing crud routes, structure the components inside app/Livewire/Admin. Eg: app/Livewire/Admin/Users.php for the "index" for Users. And make "create" and "edit" follow the following pattern: app/Livewire/Admin/[resource]/[action][resource]. Eg.: app/Livewire/Admin/Users/CreateUser.php
+- Frontend facing is inside app/Livewire/Frontend
+- For destructive actions always have wire:confirm on the form of buttons.
+- When adding a view for a livewire component, please always start with:
+```html
+<section class="w-full">
+    <x-page-heading>
+        <x-slot:title>
+           [title]
+        </x-slot:title>
+        <x-slot:subtitle>
+            [subtitle]
+        </x-slot:subtitle>
+        <x-slot:buttons>
+           
+        </x-slot:buttons>
+    </x-page-heading>
+
+    ...
+
+</section>
+```
+FluxUI
+- Use FluxUI v2 freem components such as: <flux:button>, <flux:heading>, <flux:subheading>, <flux:input> and <flux:select> when applicable.
+- When using <flux:button> the variant attribute can only be one of the following: `primary`, `outline` (never secondary), and `danger` (for destructive buttons)
+Authorization
+- When putting actions or route behind a middleware, we use Spatie's laravel-permissions.
+- When adding new permissions, keep the PermissionSeeder.php and the TestCase.php updated.
+Testing
+- Make tests using Pestphp
+- Follow the same filestructure in the tests folder.
+- Run tests with ./vendor/bin/pest --bail to fix tests / code.
+- When testing a Livewire Component we always add ->assertOk() if the component is expected to render for a user, eg.
+```php
+Livewire::actingAs($user)
+        ->test(CreateProductCategory::class)
+        ->assertOk();
+```
+
+Tailwind CSS
+    - Use Tailwind CSS for styling components, following a utility-first approach.
+    - Leverage FluxUI's pre-built components for quick UI development.
+    - Follow a consistent design language using Tailwind CSS classes.
+    - Implement responsive design and dark mode using Tailwind utilities.
+    - Optimize for accessibility (e.g., aria-attributes) when using components.
+Dependencies
+- Laravel 12 (latest stable version)
+    - Livewire 3.6+ for real-time, reactive components
+    - Alpine.js for lightweight JavaScript interactions
+    - Tailwind CSS for utility-first styling
+    - FluxUI (v2 - free) for pre-built UI components and themes
+    - Composer for dependency management
+    - NPM for frontend dependencies
+Laravel Best Practices
+    - Use Eloquent ORM instead of raw SQL queries when possible.
+    - Implement Repository pattern for data access layer.
+    - Use Laravel's built-in authentication and authorization features.
+    - Utilize Laravel's caching mechanisms for improved performance.
+    - Implement job queues for long-running tasks.
+    - Use Laravel's built-in testing tools (PestPHP for unit and feature tests.
+    - Implement API versioning for public APIs when told to.
+    - Use Laravel's localization features for multi-language support. We put strings inside 'lang/' and its follows this structure lang/[langcode]/[resource].php
+- Always use translatable strings.
+    - Implement proper CSRF protection and security measures.
+    - Use Laravel Vite for asset compilation.
+    - Implement proper database indexing for improved query performance.
+    - Use Laravel's built-in pagination features.
+    - Implement proper error logging and monitoring.
+    - Implement proper database transactions for data integrity.
+    - Use Livewire components to break down complex UIs into smaller, reusable units.
+- When in need for tables use <x-table>, <x-table.row>, <x-table.heading> and <x-table.cell> instead of normal <table>
+- In the <x-table> we need to use the two slots for `head`  and `body`, like so:
+
+```html
+<x-table>
+<x-slot:head>
+    <x-table.row>
+        <x-table.heading>{{ __('global.id') }}</x-table.heading>
+        <x-table.heading>{{ __('users.name') }}</x-table.heading>
+        <x-table.heading>{{ __('users.email') }}</x-table.heading>
+        <x-table.heading>{{ __('users.roles') }}</x-table.heading>
+        <x-table.heading class="text-right">{{ __('global.actions') }}</x-table.heading>
+    </x-table.row>
+</x-slot:head>
+<x-slot:body>
+    ...
+</x-slot:body>
+</x-table>
+```
+    - Use Laravel's event and listener system for decoupled code.
+    - Implement Laravel's built-in scheduling features for recurring tasks.
+- Never use the column type 'enum' in the database or migrations. Always use 'string' instead.
+Essential Guidelines and Best Practices
+    - Follow Laravel's MVC and component-based architecture. Dont make controllers for other this than api controllers. Al other is made using Livewire Components.
+    - Use Laravel's routing system for defining application endpoints.
+    - Implement proper request validation using Form Requests.
+    - Use Livewire and Blade components for interactive UIs.
+    - Implement proper database relationships using Eloquent.
+    - Use Laravel's built-in authentication scaffolding.
+    - Implement proper API resource transformations.
+    - Use Laravel's event and listener system for decoupled code.
+    - Use Tailwind CSS and daisyUI for consistent and efficient styling.
+    - Implement complex UI patterns using Livewire and Alpine.js.

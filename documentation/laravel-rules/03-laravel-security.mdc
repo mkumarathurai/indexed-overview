@@ -1,0 +1,150 @@
+---
+description: Laravel security and authorization guidelines
+globs:
+alwaysApply: false
+---
+# Laravel Security and Authorization Guidelines
+
+## Authorization
+
+### Permission System
+- Use Spatie's laravel-permissions package
+- Keep PermissionSeeder.php updated with new permissions
+- Update TestCase.php when adding new permissions
+
+### Permission Structure
+```php
+// In PermissionSeeder.php
+Permission::create(['name' => 'view users']);
+Permission::create(['name' => 'create users']);
+Permission::create(['name' => 'edit users']);
+Permission::create(['name' => 'delete users']);
+
+// In TestCase.php
+protected function setUp(): void
+{
+    parent::setUp();
+    $this->seed(PermissionSeeder::class);
+}
+```
+
+### Role Assignment
+```php
+// Assign permissions to roles
+$adminRole = Role::create(['name' => 'admin']);
+$adminRole->givePermissionTo([
+    'view users',
+    'create users',
+    'edit users',
+    'delete users',
+]);
+
+// Assign role to user
+$user->assignRole('admin');
+```
+
+## Security Best Practices
+
+### Authentication
+- Use Laravel's built-in authentication
+- Implement proper password policies
+- Use secure session handling
+- Implement proper logout handling
+- Use remember me functionality appropriately
+
+### Authorization Checks
+```php
+// In Livewire components
+public function mount()
+{
+    $this->authorize('view users');
+}
+
+// In Blade views
+@can('edit users')
+    <flux:button>Edit User</flux:button>
+@endcan
+
+// In controllers
+public function store(Request $request)
+{
+    $this->authorize('create users');
+    // ...
+}
+```
+
+### API Security
+- Use Laravel Sanctum for API authentication
+- Implement proper API rate limiting
+- Use proper API versioning
+- Implement proper API documentation
+- Use proper API response formatting
+
+### Data Protection
+- Use proper encryption for sensitive data
+- Implement proper data validation
+- Use proper input sanitization
+- Implement proper output escaping
+- Use proper file upload handling
+
+### Security Headers
+```php
+// In App\Http\Middleware\SecurityHeaders.php
+public function handle($request, Closure $next)
+{
+    $response = $next($request);
+
+    $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+    $response->headers->set('X-XSS-Protection', '1; mode=block');
+    $response->headers->set('X-Content-Type-Options', 'nosniff');
+    $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    return $response;
+}
+```
+
+### CSRF Protection
+- Always use CSRF tokens in forms
+- Use proper CSRF token validation
+- Implement proper CSRF token refresh
+- Use proper CSRF token handling in AJAX requests
+
+### XSS Prevention
+- Use proper output escaping
+- Use proper input validation
+- Use proper content security policy
+- Use proper HTML sanitization
+
+### SQL Injection Prevention
+- Use Eloquent ORM
+- Use query builder
+- Use proper parameter binding
+- Use proper prepared statements
+
+## Security Monitoring
+
+### Logging
+- Implement proper error logging
+- Implement proper security event logging
+- Use proper log rotation
+- Implement proper log analysis
+
+### Monitoring
+- Implement proper security monitoring
+- Use proper intrusion detection
+- Implement proper alerting
+- Use proper security scanning
+
+## Security Testing
+
+### Automated Testing
+- Implement proper security tests
+- Use proper security testing tools
+- Implement proper vulnerability scanning
+- Use proper penetration testing
+
+### Manual Testing
+- Implement proper security reviews
+- Use proper security checklists
+- Implement proper security audits
+- Use proper security documentation

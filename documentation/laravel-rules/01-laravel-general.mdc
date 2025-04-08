@@ -1,0 +1,78 @@
+---
+description: General Laravel development guidelines and best practices
+globs: ["**/*.php", "**/*.blade.php"]
+alwaysApply: true
+---
+
+# Laravel Development Guidelines
+
+## Related Guidelines
+This is the main Laravel development guideline document. For specific aspects of development, please refer to the following additional guidelines:
+
+- [01-laravel-general.mdc](mdc:.cursor/rules/01-laravel-general.mdc) - This file.
+- [02-laravel-components.mdc](mdc:.cursor/rules/02-laravel-components.mdc) - Guidelines for Livewire, Blade, and UI components
+- [03-laravel-security.mdc](mdc:.cursor/rules/03-laravel-security.mdc) - Security and authorization best practices
+- [04-laravel-testing.mdc](mdc:.cursor/rules/04-laravel-testing.mdc) - Testing standards and practices
+
+## Version Requirements
+- PHP 8.1+
+- Laravel 12 (latest stable version)
+- Livewire 3.6+
+- Alpine.js
+- Tailwind CSS
+- FluxUI v2 (free components)
+- Composer for dependency management
+- NPM for frontend dependencies
+
+## Core Principles
+- Write concise, technical responses with accurate PHP and Livewire examples
+- Focus on component-based architecture using Livewire and Laravel's latest features
+- Follow Laravel and Livewire best practices and conventions
+- Use object-oriented programming with a focus on SOLID principles
+- Prefer iteration and modularization over duplication
+- Use descriptive variable, method, and component names
+- Use lowercase with dashes for directories (e.g., app/Http/Livewire)
+- Favor dependency injection and service containers
+
+## Directory Structure
+```
+app/
+├── Http/
+│   └── Livewire/
+│       ├── Admin/
+│       │   ├── Users.php
+│       │   └── Users/
+│       │       ├── CreateUser.php
+│       │       └── EditUser.php
+│       └── Frontend/
+├── Models/
+├── Services/
+├── Repositories/
+└── Events/
+```
+
+## Coding Standards
+- Follow PSR-12 coding standards
+- Use strict typing: `declare(strict_types=1);`
+- Use PHP 8.1+ features when appropriate (typed properties, match expressions)
+- Implement proper error handling and logging
+- Use Laravel's validation features for form and request validation
+- Implement middleware for request filtering and modification
+- Utilize Laravel's Eloquent ORM for database interactions
+- Use Laravel's query builder for complex database queries
+- Implement proper database migrations and seeders
+
+## Database Guidelines
+- Never use the column type 'enum' in the database or migrations. Always use 'string' instead
+- Implement proper database indexing for improved query performance
+- Use Laravel's built-in pagination features
+- Implement proper database transactions for data integrity
+- Use Laravel's event and listener system for decoupled code
+- Implement Laravel's built-in scheduling features for recurring tasks
+
+## Performance Guidelines
+- Implement proper caching strategies using Laravel's cache system
+- Use Laravel's job queues for long-running tasks
+- Optimize database queries and use eager loading when appropriate
+- Implement proper asset optimization using Laravel Vite
+- Use Laravel's built-in performance features (e.g., query caching)

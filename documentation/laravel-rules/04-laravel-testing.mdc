@@ -1,0 +1,152 @@
+---
+description: Laravel testing guidelines and best practices
+globs: ["**/*.php", "**/*.blade.php"]
+alwaysApply: false
+---
+
+# Laravel Testing Guidelines
+- Everytime we make a new feature or change an existing one, we need to write tests and run them, to ensure all functionality.
+- Focused on testing the core functionality (database changes and UI updates)
+- Maintained proper permission checks
+- Dont make alert assertions since they're handled by the LivewireAlert trait
+- Run tests with `./vendor/bin/pest --bail` to fix tests/code
+
+## Testing Framework
+- Use PestPHP for all tests
+- Follow the same file structure in the tests folder as the application code
+
+
+
+## Test Structure
+```
+tests/
+├── Feature/
+│   ├── Admin/
+│   │   └── Users/
+│   │       ├── CreateUserTest.php
+│   │       └── EditUserTest.php
+│   └── Frontend/
+└── Unit/
+    ├── Models/
+    └── Services/
+```
+
+## Livewire Component Testing
+
+### Basic Component Test
+```php
+test('component renders successfully', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CreateUser::class)
+        ->assertOk();
+});
+```
+
+### Testing Component Actions
+```php
+test('can create user', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CreateUser::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'john@example.com')
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertRedirect();
+});
+```
+
+### Testing Validation
+```php
+test('validates required fields', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CreateUser::class)
+        ->call('save')
+        ->assertHasErrors(['name', 'email']);
+});
+```
+
+## Database Testing
+
+### Factory Usage
+```php
+test('user can be created', function () {
+    $user = User::factory()->create([
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+    ]);
+
+    expect($user)
+        ->name->toBe('John Doe')
+        ->email->toBe('john@example.com');
+});
+```
+
+### Database Transactions
+- Use `RefreshDatabase` trait for database tests
+- Use `DatabaseTransactions` for performance when possible
+
+## Feature Testing
+
+### HTTP Tests
+```php
+test('can access admin dashboard', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)
+        ->get(route('admin.dashboard'));
+
+    $response->assertOk();
+});
+```
+
+### API Tests
+```php
+test('can fetch user data', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)
+        ->getJson(route('api.users.show', $user));
+
+    $response->assertOk()
+        ->assertJsonStructure([
+            'id',
+            'name',
+            'email',
+        ]);
+});
+```
+
+## Testing Best Practices
+
+### General Guidelines
+- Test happy paths and edge cases
+- Use descriptive test names
+- Group related tests using `describe()`
+- Use `beforeEach()` for common setup
+- Mock external services
+- Use factories for test data
+- Test both success and failure scenarios
+- Test authorization and permissions
+- Test validation rules
+- Test component events and listeners
+
+### Performance
+- Use `DatabaseTransactions` when possible
+- Clean up after tests
+- Use proper assertions
+- Avoid unnecessary database queries
+- Use proper test isolation
+
+### Security Testing
+- Test authentication
+- Test authorization
+- Test input validation
+- Test CSRF protection
+- Test XSS prevention
+- Test SQL injection prevention

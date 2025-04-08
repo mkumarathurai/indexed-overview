@@ -1,0 +1,164 @@
+---
+description: Laravel component guidelines for Livewire, Blade, and UI components
+globs: ["**/*.php", "**/*.blade.php"]
+alwaysApply: false
+---
+
+# Laravel Component Guidelines
+
+## Livewire Components
+
+### Component Organization
+- Admin facing CRUD routes: `app/Livewire/Admin/[Resource].php` for index
+- Create/Edit components: `app/Livewire/Admin/[resource]/[action][Resource].php`
+- Frontend components: `app/Livewire/Frontend/`
+
+### Component Structure for admin facing components:
+```php
+declare(strict_types=1);
+
+namespace App\Livewire\Admin;
+
+use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+class Users extends Component
+{
+    #[Layout('components.layouts.admin')]
+    public function render(): View
+    {
+        return view('livewire.admin.users');
+    }
+}
+```
+
+### Component Structure for frontend facing components:
+```php
+declare(strict_types=1);
+
+namespace App\Livewire\Frontend;
+
+use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+class Users extends Component
+{
+    #[Layout('components.layouts.app')]
+    public function render(): View
+    {
+        return view('livewire.frontend.users');
+    }
+}
+```
+
+### View Structure
+Every Livewire component view should follow this structure:
+```html
+<section class="w-full">
+    <x-page-heading>
+        <x-slot:title>
+            {{ __('users.title') }}
+        </x-slot:title>
+        <x-slot:subtitle>
+            {{ __('users.subtitle') }}
+        </x-slot:subtitle>
+        <x-slot:buttons>
+            <!-- Action buttons -->
+        </x-slot:buttons>
+    </x-page-heading>
+
+    <!-- Component content -->
+</section>
+```
+
+## FluxUI Components
+
+### Available Components
+- `<flux:button>` - Variants: `primary`, `outline`, `danger`
+- `<flux:heading>`
+- `<flux:subheading>`
+- `<flux:input>`
+- `<flux:select>`
+
+### Button Usage
+```html
+<flux:button variant="primary">
+    {{ __('actions.save') }}
+</flux:button>
+
+<flux:button variant="outline">
+    {{ __('actions.cancel') }}
+</flux:button>
+
+<flux:button variant="danger">
+    {{ __('actions.delete') }}
+</flux:button>
+```
+
+## Table Components
+
+### Structure
+```html
+<x-table>
+    <x-slot:head>
+        <x-table.row>
+            <x-table.heading>{{ __('global.id') }}</x-table.heading>
+            <x-table.heading>{{ __('users.name') }}</x-table.heading>
+            <x-table.heading>{{ __('users.email') }}</x-table.heading>
+            <x-table.heading>{{ __('users.roles') }}</x-table.heading>
+            <x-table.heading class="text-right">{{ __('global.actions') }}</x-table.heading>
+        </x-table.row>
+    </x-slot:head>
+    <x-slot:body>
+        <!-- Table rows -->
+    </x-slot:body>
+</x-table>
+```
+
+## Form Guidelines
+
+### Validation
+- Use Laravel's built-in validation features
+- Implement form requests for complex validation
+- Use Livewire's real-time validation when appropriate
+
+### Security
+- Always use wire:confirm for destructive actions
+- Implement proper CSRF protection
+- Use Laravel's built-in XSS protection
+
+## Localization
+
+### Structure
+```
+lang/
+├── en/
+│   ├── users.php
+│   ├── products.php
+│   └── global.php
+└── da/
+    ├── users.php
+    ├── products.php
+    └── global.php
+```
+
+### Usage
+```php
+// In PHP
+__('users.name')
+
+// In Blade
+{{ __('users.name') }}
+```
+
+## Component Best Practices
+- Keep components focused and single-responsibility
+- Use proper prop typing and validation
+- Implement proper error handling
+- Use loading states appropriately
+- Follow accessibility guidelines
+- Implement proper responsive design
+- Use proper event handling
+- Implement proper state management
