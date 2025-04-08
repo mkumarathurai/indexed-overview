@@ -37,7 +37,7 @@ class ProjectsController extends Controller
         }
 
         return view('projects::projects-index', [
-            'projects' => $projects['values'],
+            'projects' => array_values($projects['values']), // Ensure sequential array
             'selectedPeriod' => $selectedPeriod,
             'periods' => $periods,
             'totalMonthlyHours' => collect($projectHours)->sum('monthly_hours'),

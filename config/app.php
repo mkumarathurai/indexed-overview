@@ -128,8 +128,9 @@ return [
     | Service Providers
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the service providers that should be loaded
-    | automatically by the application.
+    | The service providers listed here will be automatically loaded on the
+    | request to your application. Feel free to add your own services to
+    | this array to grant expanded functionality to your applications.
     |
     */
 
@@ -161,8 +162,15 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
+         * Package Service Providers...
+         */
+        Livewire\LivewireServiceProvider::class,
+
+        /*
          * Application Service Providers...
          */
+        App\Providers\AppServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
         App\Modules\Projects\ProjectsServiceProvider::class,
     ],
 

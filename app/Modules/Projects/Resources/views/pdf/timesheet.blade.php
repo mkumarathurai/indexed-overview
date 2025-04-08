@@ -50,7 +50,7 @@
         }
         .total {
             font-weight: normal;
-            border-top: 2px solid #000;
+            border-top: 2px solid #eee;
         }
         .total td {
             padding-top: 10px;

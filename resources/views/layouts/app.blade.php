@@ -13,6 +13,7 @@
     </nav>
     <!-- Add Alpine.js for dark mode toggle -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @livewireStyles
 </head>
 <body class="h-full bg-gray-50 dark:bg-gray-900" x-data="{ darkMode: false }" :class="{ 'dark': darkMode }">
     <div class="min-h-full">
@@ -82,5 +83,6 @@
             </main>
         </div>
     </div>
+    @livewireScripts
 </body>
 </html>

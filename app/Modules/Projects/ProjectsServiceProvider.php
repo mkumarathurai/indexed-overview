@@ -15,6 +15,9 @@ class ProjectsServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/Routes/web.php');
         $this->loadViewsFrom(__DIR__ . '/Resources/views', 'projects');
+        
+        // Register Livewire Components
+        \Livewire\Livewire::component('projects-table', \App\Modules\Projects\Http\Livewire\ProjectsTable::class);
     }
 
     /**
