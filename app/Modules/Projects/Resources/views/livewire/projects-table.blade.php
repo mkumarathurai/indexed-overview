@@ -71,10 +71,10 @@
                         {{ $project['name'] }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-white">
-                        {{ number_format($project['monthly_hours'] ?? 0, 1) }}
+                        {{ number_format($project['monthly_hours'] ?? 0, 2) }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 dark:text-white">
-                        {{ number_format($project['invoice_ready_hours'] ?? 0, 1) }}
+                        {{ number_format($project['invoice_ready_hours'] ?? 0, 2) }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div class="flex items-center justify-end space-x-3">

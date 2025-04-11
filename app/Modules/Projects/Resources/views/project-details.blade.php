@@ -42,7 +42,7 @@
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="px-4 py-5 sm:p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Total Hours</h3>
-                <p class="text-3xl font-semibold text-gray-900">{{ number_format($totalHours, 1) }}</p>
+                <p class="text-3xl font-semibold text-gray-900">{{ number_format($totalHours, 2) }}</p>
             </div>
         </div>
 
@@ -50,7 +50,7 @@
         <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="px-4 py-5 sm:p-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Invoice Ready Hours</h3>
-                <p class="text-3xl font-semibold text-indigo-600">{{ number_format($invoiceReadyHours, 1) }}</p>
+                <p class="text-3xl font-semibold text-indigo-600">{{ number_format($invoiceReadyHours, 2) }}</p>
             </div>
         </div>
     </div>
@@ -77,7 +77,7 @@
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $issue['fields']['summary'] }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $issue['fields']['status']['name'] }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $issue['fields']['assignee']['displayName'] ?? 'Unassigned' }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">{{ number_format($issue['hours'] ?? 0, 1) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">{{ number_format($issue['hours'] ?? 0, 2) }}</td>
                             </tr>
                         @empty
                             <tr>

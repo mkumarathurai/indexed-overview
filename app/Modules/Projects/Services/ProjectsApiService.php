@@ -159,7 +159,7 @@ class ProjectsApiService
         foreach ($issues as &$issue) {
             $worklogSeconds = collect($issue['fields']['worklog']['worklogs'] ?? [])
                 ->sum('timeSpentSeconds');
-            $issue['hours'] = round($worklogSeconds / 3600, 1);
+            $issue['hours'] = $worklogSeconds / 3600;
         }
 
         return $issues;
@@ -211,6 +211,6 @@ class ProjectsApiService
                 $totalSeconds += $worklog['timeSpentSeconds'];
             }
         }
-        return round($totalSeconds / 3600, 1);
+        return $totalSeconds / 3600;
     }
 }

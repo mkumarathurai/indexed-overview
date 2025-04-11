@@ -172,6 +172,9 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Modules\Projects\ProjectsServiceProvider::class,
+        App\Modules\Dashboard\DashboardServiceProvider::class,
+        App\Modules\Budgets\BudgetsServiceProvider::class,
+        App\Modules\TempoHours\TempoHoursServiceProvider::class,
     ],
 
 ];

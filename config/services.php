@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'tempo' => [
+        'base_url' => env('TEMPO_BASE_URL'),
+        'api_token' => env('TEMPO_API_TOKEN'),
+    ],
+
+    'jira' => [
+        'base_url' => env('JIRA_BASE_URL'),
+        'api_token' => env('JIRA_API_TOKEN'),
+        'email' => env('JIRA_EMAIL'),
+    ],
+
 ];
