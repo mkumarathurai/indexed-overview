@@ -56,8 +56,9 @@ Manages budget operations:
 
 Key Methods:
 ```php
-store() // Creates or updates budget data
-destroy() // Deletes budget data
+save() // Creates or updates budget data
+delete() // Deletes budget data by year and month
+convertToInteger() // Converts input values to integers, handling Danish number formats
 ```
 
 ## Directory Structure
@@ -66,19 +67,22 @@ destroy() // Deletes budget data
 app/Modules/Budgets/
 ├── Console/
 │   └── Commands/
-├── Controllers/
-│   └── BudgetsController.php
 ├── Http/
+│   ├── Controllers/
+│   │   └── BudgetsController.php
 │   └── Livewire/
 │       └── BudgetsIndex.php
 ├── Models/
 │   └── MonthlyBudget.php
 ├── Resources/
 │   └── views/
-│       └── components/
+│       ├── budgets-index.blade.php
+│       └── livewire/
 │           └── budgets-index.blade.php
 ├── Routes/
 │   └── web.php
+├── Database/
+│   └── Migrations/
 ├── BudgetsServiceProvider.php
 └── BudgetsRouteServiceProvider.php
 ```
@@ -86,8 +90,59 @@ app/Modules/Budgets/
 ## URL Structure
 
 - `/budgets`: Main budgets dashboard
-- `/budgets` (POST): Store new budget data
-- `/budgets/{budget}` (DELETE): Delete budget data
+- `/budgets/save` (POST): Store new budget data
+- `/budgets/delete` (DELETE): Delete budget data
+
+## Implementation Details
+
+### Form Handling
+
+The module uses two approaches for handling budget data:
+
+1. **Traditional HTML Forms**:
+   - Forms submit to the BudgetsController for direct HTTP operations
+   - Year and month are used as unique identifiers for budgets
+   - Data validation and Danish number formats are handled server-side
+
+2. **Livewire Component Methods**:
+   - Provides real-time calculations and updates
+   - Handles loading states and notifications
+   - Used for enhanced user experience with reactive data
+
+### Number Formatting
+
+The application handles Danish number formatting in both directions:
+
+- **Input**: Accepts Danish number format (with comma as decimal separator and period as thousand separator)
+- **Output**: Displays numbers in Danish format using either:
+  - Laravel's Number facade for currency display
+  - Custom number_format with Danish locale settings
+
+### Budget Calculations
+
+#### Target Calculation
+The target is calculated as expenses plus 30% profit:
+```
+mål = udgift * 1.30
+```
+
+#### Difference (Delmål) Calculation
+The difference is calculated as the accumulated difference from all previous months plus the current month's difference:
+
+```php
+// For each month:
+current_diff = omsaetning - mål
+accumulated_diff = sum of all previous months' (omsaetning - mål)
+delmål = accumulated_diff + current_diff
+```
+
+### Error Handling
+
+The module implements comprehensive error handling:
+- Exception catching for all database operations
+- Detailed logging of errors
+- User-friendly notifications
+- Flash messages for both success and error states
 
 ## Data Structure
 
@@ -110,33 +165,6 @@ protected $casts = [
     'maal_baseret_paa_udgift' => 'decimal:2',
     'delmaal' => 'decimal:2'
 ];
-```
-
-# Budget Calculations Documentation
-
-## Overview
-This document explains the budget calculations used in the Monthly Budget module, specifically how the target (mål) and difference (delmål) are calculated.
-
-## Calculations
-
-### 1. Target (Mål baseret på udgift)
-The target is calculated as expenses plus 30% profit:
-```
-mål = udgift * 1.30
-```
-
-Example:
-- If expenses (udgift) = 302.000
-- Target (mål) = 302.000 * 1.30 = 392.600
-
-### 2. Difference (Delmål)
-The difference is calculated as the accumulated difference from all previous months plus the current month's difference:
-
-```php
-// For each month:
-current_diff = omsaetning - mål
-accumulated_diff = sum of all previous months' (omsaetning - mål)
-delmål = accumulated_diff + current_diff
 ```
 
 ## Real Examples from Excel Sheet
@@ -171,82 +199,34 @@ delmål = accumulated_diff + current_diff
 - Current diff: 562.000 - 458.900 = 103.100
 - Delmål: -131.600 + 103.100 = -28.500
 
-## Code Implementation
-```php
-public function saveBudget($year, $month)
-{
-    // Find the current budget index
-    $index = collect($this->budgets)->search(function($budget) use ($year, $month) {
-        return $budget['year'] == $year && $budget['month'] == $month;
-    });
-
-    $budget = $this->budgets[$index];
-    
-    // Get basic values
-    $omsaetning = (float) $budget['omsaetning_salg_total'];
-    $udgift = (float) $budget['udgift_variable_kapacitet'];
-
-    // Calculate target (30% profit)
-    $maal = round($udgift * 1.30);
-    
-    // Calculate accumulated difference from previous months
-    $previousMonths = collect($this->budgets)->take($index);
-    $accumulatedDiff = $previousMonths->sum(function($b) {
-        $prevOmsaetning = (float) $b['omsaetning_salg_total'];
-        $prevUdgift = (float) $b['udgift_variable_kapacitet'];
-        $prevMaal = round($prevUdgift * 1.30);
-        return $prevOmsaetning - $prevMaal;
-    });
-    
-    // Calculate final difference
-    $delmaal = round($accumulatedDiff + ($omsaetning - $maal));
-}
-```
-
 ## Important Notes
+
 1. All calculations use whole numbers (no decimals)
 2. The delmål (difference) accumulates from month to month
 3. Each month's delmål includes:
    - The accumulated difference from all previous months
    - Plus the current month's difference between revenue and target
 4. A negative delmål means we are behind target
-5. A positive delmål means we are ahead of target 
+5. A positive delmål means we are ahead of target
 
-## Features
+## UI Components
 
-### 1. Financial Year Handling
-- Financial year runs from July to June
-- Automatic month generation for the current financial year
-- Danish month names and formatting
+### 1. Statistics Cards
+- Total Revenue: Displays total revenue across all budgets
+- Total Expenses: Shows total expenses for all budgets
+- Total Target: Displays the total target amount
+- Under Budget: Shows how much current revenue is under the target
 
-### 2. Target Calculations
-- Target based on expenses (30% profit margin)
-- Automatic calculation of sub-targets
-- Real-time updates of calculations
+### 2. Budget Table
+- Displays budgets by month with editable fields for revenue and expenses
+- Shows calculated targets and sub-targets
+- Provides save and delete actions for each budget entry
+- Handles both numeric inputs and formatted Danish values
 
-### 3. Data Formatting
-- Danish number format handling
-- Currency formatting in DKK
-- Proper decimal handling
-
-### 4. User Interface
-- Clean, responsive design
-- Real-time updates
-- Loading states
-- Error handling
-- Success messages
-
-## Integration Points
-
-### 1. Dashboard Integration
-- Provides revenue data for dashboard
-- Used in financial reporting
-- Integrated with project hours tracking
-
-### 2. Currency Handling
-- Uses Laravel's Number facade for formatting
-- Handles Danish currency format
-- Proper decimal and thousand separators
+### 3. Notifications
+- Toast notifications for successful operations and errors
+- Flash messages for form submissions
+- Real-time feedback for user actions
 
 ## Troubleshooting
 
@@ -254,7 +234,7 @@ public function saveBudget($year, $month)
 
 1. **Data Formatting**: If numbers aren't displaying correctly:
    - Check Danish locale settings
-   - Verify number format conversion
+   - Verify number format conversion in convertToInteger() method
    - Ensure proper decimal handling
 
 2. **Target Calculations**: If targets aren't calculating correctly:
