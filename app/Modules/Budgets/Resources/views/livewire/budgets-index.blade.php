@@ -1,7 +1,5 @@
 <div class="container mx-auto px-4 py-8" wire:poll.30s id="budgets-container">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Budgets Overview</h1>
-        <!-- Testknap for debugging -->
+        <!-- 
         <div class="flex gap-3">
             <button onclick="showNotification('Test notifikation', 'info')"
                     class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -25,7 +23,8 @@
             </button>
         </div>
     </div>
-    
+ --> 
+
     <!-- Toast notification -->
     <div id="notification" 
          style="display: none;"
@@ -110,97 +109,34 @@
             @endif
         </div>
 
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <!-- Total Revenue Card -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Total omsætning</p>
-                        <p class="text-xl font-bold text-gray-900 mt-1">{{ Number::currency($totalRevenue, 'DKK', 'da_DK') }}</p>
-                    </div>
-                    <div class="bg-blue-50 rounded-xl p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total Expenses Card -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Total udgift</p>
-                        <p class="text-xl font-bold text-gray-900 mt-1">{{ Number::currency($totalExpenses, 'DKK', 'da_DK') }}</p>
-                    </div>
-                    <div class="bg-red-50 rounded-xl p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total Target Card -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Total forventet</p>
-                        <p class="text-xl font-bold text-gray-900 mt-1">{{ Number::currency($totalTarget, 'DKK', 'da_DK') }}</p>
-                    </div>
-                    <div class="bg-green-50 rounded-xl p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Under Budget Card -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-100 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Under budget</p>
-                        <p class="text-xl font-bold text-gray-900 mt-1">{{ Number::currency($underBudget, 'DKK', 'da_DK') }}</p>
-                    </div>
-                    <div class="bg-yellow-50 rounded-xl p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Budget Table -->
+       <!-- Budget Table -->
         <div class="flex flex-col">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white overflow-hidden shadow rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <dt class="text-sm font-medium text-gray-500 truncate">Total omsætning</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ number_format($totalRevenue, 0, ',', '.') }} kr</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-emerald-600">{{ number_format($totalRevenue, 0, ',', '.') }} kr</dd>
                     </div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <dt class="text-sm font-medium text-gray-500 truncate">Total udgifter</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ number_format($totalExpenses, 0, ',', '.') }} kr</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-red-600">{{ number_format($totalExpenses, 0, ',', '.') }} kr</dd>
                     </div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <dt class="text-sm font-medium text-gray-500 truncate">Total mål</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ number_format($totalTarget, 0, ',', '.') }} kr</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-indigo-600">{{ number_format($totalTarget, 0, ',', '.') }} kr</dd>
                     </div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <dt class="text-sm font-medium text-gray-500 truncate">Under budget</dt>
-                        <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ number_format($underBudget, 0, ',', '.') }} kr</dd>
+                        <dd class="mt-1 text-2xl font-semibold text-gray-900">{{ number_format($underBudget, 0, ',', '.') }} kr</dd>
                     </div>
                 </div>
             </div>

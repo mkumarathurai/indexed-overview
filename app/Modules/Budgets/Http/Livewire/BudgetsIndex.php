@@ -4,7 +4,7 @@ namespace App\Modules\Budgets\Http\Livewire;
 
 use Carbon\Carbon;
 use Livewire\Component;
-use App\Modules\Budgets\Models\MonthlyBudget;
+use App\Modules\Budgets\Models\Budget;
 use Illuminate\Support\Facades\Log;
 
 class BudgetsIndex extends Component
@@ -67,7 +67,7 @@ class BudgetsIndex extends Component
             }
 
             // Get budgets for both 2024 and 2025
-            $budgets = MonthlyBudget::whereIn('year', [2024, 2025])
+            $budgets = Budget::whereIn('year', [2024, 2025])
                 ->orderBy('year')
                 ->orderBy('month')
                 ->get();
@@ -194,20 +194,14 @@ class BudgetsIndex extends Component
         $this->isLoading = true;
 
         try {
-            $budget = MonthlyBudget::firstOrNew([
+            $budget = Budget::firstOrNew([
                 'year' => $year,
                 'month' => $month,
             ]);
 
-            $revenue = (int) request()->input('omsaetning_salg_total', 0);
-            $expenses = (int) request()->input('udgift_variable_kapacitet', 0);
-
-            $budget->revenue = $revenue;
-            $budget->expenses = $expenses;
-            $budget->target = $budget->calculateTarget($revenue);
-            $budget->sub_target = $budget->calculateSubTarget($revenue);
-            $budget->diff = $budget->calculateDiff($budget->sub_target, $expenses);
-            
+            $budget->omsaetning_salg_total = $this->convertToInteger(request()->input('omsaetning_salg_total', 0));
+            $budget->udgift_variable_kapacitet = $this->convertToInteger(request()->input('udgift_variable_kapacitet', 0));
+            $budget->maal_baseret_paa_udgift = $budget->calculateTarget();
             $budget->save();
 
             $this->notification = 'Budget gemt!';
@@ -228,7 +222,7 @@ class BudgetsIndex extends Component
         $this->isLoading = true;
 
         try {
-            MonthlyBudget::where('year', $year)->where('month', $month)->delete();
+            Budget::where('year', $year)->where('month', $month)->delete();
             
             $this->notification = 'Budget slettet!';
             $this->notificationType = 'success';

@@ -4,7 +4,7 @@ namespace App\Modules\Budgets\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Modules\Budgets\Models\MonthlyBudget;
+use App\Modules\Budgets\Models\Budget;
 use Illuminate\Support\Facades\Log;
 
 class BudgetsController extends Controller
@@ -28,7 +28,7 @@ class BudgetsController extends Controller
             $maal = (int)round($udgift * 1.30);
             
             // Get all previous months
-            $previousMonths = MonthlyBudget::where(function($query) use ($year, $month) {
+            $previousMonths = Budget::where(function($query) use ($year, $month) {
                 $query->where('year', '<', $year)
                     ->orWhere(function($q) use ($year, $month) {
                         $q->where('year', '=', $year)
@@ -48,7 +48,7 @@ class BudgetsController extends Controller
             $delmaal = (int)round($accumulatedDiff + ($omsaetning - $maal));
             
             // Save the budget using updateOrCreate
-            $budget = MonthlyBudget::updateOrCreate(
+            $budget = Budget::updateOrCreate(
                 ['year' => $year, 'month' => $month],
                 [
                     'omsaetning_salg_total' => $omsaetning,
@@ -74,7 +74,7 @@ class BudgetsController extends Controller
             $month = (int)$request->input('month');
             
             // Find and delete the budget
-            $deleted = MonthlyBudget::where('year', $year)
+            $deleted = Budget::where('year', $year)
                 ->where('month', $month)
                 ->delete();
             
