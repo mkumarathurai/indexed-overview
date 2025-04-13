@@ -54,6 +54,36 @@
                         Projects
                     </a>
                  
+                    <a href="{{ route('employees.index') }}" 
+                       class="flex items-center px-4 py-2 rounded-lg {{ request()->routeIs('employees.*') 
+                           ? 'bg-indigo-500 text-white' 
+                           : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        Indexed Staff
+                    </a>
+
+                    <a href="{{ route('holidays.index') }}" 
+                       class="flex items-center px-4 py-2 rounded-lg {{ request()->routeIs('holidays.*') 
+                           ? 'bg-indigo-500 text-white' 
+                           : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Holidays
+                    </a>
+
+                    <a href="{{ route('jira-users.index') }}" 
+                       class="flex items-center px-4 py-2 rounded-lg {{ request()->routeIs('jira-users.*') 
+                           ? 'bg-indigo-500 text-white' 
+                           : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        All Jira Users
+                    </a>
+
                     <a href="{{ route('tempo-hours.index') }}" 
                        class="flex items-center px-4 py-2 rounded-lg {{ request()->routeIs('tempo-hours.*') 
                            ? 'bg-indigo-500 text-white' 
@@ -108,5 +138,29 @@
     <!-- Scripts -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @livewireScripts
+    @stack('scripts')
+    
+    <!-- Initialize Livewire -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.Livewire !== 'undefined') {
+                // Support for manually triggering events if needed
+                window.dispatchLivewireEvent = function(componentId, eventName, ...params) {
+                    if (window.Livewire) {
+                        if (typeof window.Livewire.find === 'function') {
+                            // Livewire 2
+                            const component = window.Livewire.find(componentId);
+                            if (component) {
+                                component.call(eventName, ...params);
+                            }
+                        } else if (typeof window.Livewire.dispatch === 'function') {
+                            // Livewire 3
+                            window.Livewire.dispatch(eventName, ...params);
+                        }
+                    }
+                };
+            }
+        });
+    </script>
 </body>
 </html>
